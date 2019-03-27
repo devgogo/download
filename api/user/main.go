@@ -13,7 +13,11 @@ func main() {
 	)
 	service.Init()
 
-	_ = user.RegisterUsersHandler(service.Server(), &handler.User{Client: service.Client()})
+	err := user.RegisterUserHandler(service.Server(), &handler.User{Client: service.Client()})
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	if err := service.Run(); err != nil {
 		log.Fatal(err)
 	}

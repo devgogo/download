@@ -12,6 +12,7 @@ type User struct {
 
 func (s *User) Create(ctx context.Context, req *pb.User, rsp *pb.User) error {
 	accountClient := pb.NewAccountService("go.micro.srv.account", s.Client)
+
 	accountRsp, err := accountClient.Create(ctx, req)
 	if err != nil {
 		return err

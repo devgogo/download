@@ -39,32 +39,32 @@ var _ context.Context
 var _ client.Option
 var _ server.Option
 
-// Client API for Users service
+// Client API for User service
 
-type UsersService interface {
+type UserService interface {
 	Create(ctx context.Context, in *account.User, opts ...client.CallOption) (*account.User, error)
 }
 
-type usersService struct {
+type userService struct {
 	c    client.Client
 	name string
 }
 
-func NewUsersService(name string, c client.Client) UsersService {
+func NewUserService(name string, c client.Client) UserService {
 	if c == nil {
 		c = client.NewClient()
 	}
 	if len(name) == 0 {
-		name = "users"
+		name = "user"
 	}
-	return &usersService{
+	return &userService{
 		c:    c,
 		name: name,
 	}
 }
 
-func (c *usersService) Create(ctx context.Context, in *account.User, opts ...client.CallOption) (*account.User, error) {
-	req := c.c.NewRequest(c.name, "Users.Create", in)
+func (c *userService) Create(ctx context.Context, in *account.User, opts ...client.CallOption) (*account.User, error) {
+	req := c.c.NewRequest(c.name, "User.Create", in)
 	out := new(account.User)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -73,27 +73,27 @@ func (c *usersService) Create(ctx context.Context, in *account.User, opts ...cli
 	return out, nil
 }
 
-// Server API for Users service
+// Server API for User service
 
-type UsersHandler interface {
+type UserHandler interface {
 	Create(context.Context, *account.User, *account.User) error
 }
 
-func RegisterUsersHandler(s server.Server, hdlr UsersHandler, opts ...server.HandlerOption) error {
-	type users interface {
+func RegisterUserHandler(s server.Server, hdlr UserHandler, opts ...server.HandlerOption) error {
+	type user interface {
 		Create(ctx context.Context, in *account.User, out *account.User) error
 	}
-	type Users struct {
-		users
+	type User struct {
+		user
 	}
-	h := &usersHandler{hdlr}
-	return s.Handle(s.NewHandler(&Users{h}, opts...))
+	h := &userHandler{hdlr}
+	return s.Handle(s.NewHandler(&User{h}, opts...))
 }
 
-type usersHandler struct {
-	UsersHandler
+type userHandler struct {
+	UserHandler
 }
 
-func (h *usersHandler) Create(ctx context.Context, in *account.User, out *account.User) error {
-	return h.UsersHandler.Create(ctx, in, out)
+func (h *userHandler) Create(ctx context.Context, in *account.User, out *account.User) error {
+	return h.UserHandler.Create(ctx, in, out)
 }

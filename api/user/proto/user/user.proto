@@ -1,8 +1,10 @@
 syntax = "proto3";
 
+package user;
+
 import "github.com/wenmingtang/download/srv/account/proto/account/account.proto";
 
-service Users {
-    rpc Create (User) returns (User) {
+service User {
+    rpc Create (account.User) returns (account.User) {
     }
 }
