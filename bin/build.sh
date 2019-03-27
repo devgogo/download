@@ -12,3 +12,4 @@ build() {
 }
 
 build srv
+build api
