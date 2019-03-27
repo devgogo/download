@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+service Account {
+    rpc Create (User) returns (Response) {
+    }
+    rpc Get (User) returns (Response) {
+    }
+    rpc Update (User) returns (Response) {
+    }
+    rpc Auth (User) returns (Token) {
+    }
+    rpc ValidateToken (Token) returns (Token) {
+    }
+}
+
+message User {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+    string password = 4;
+    string created = 5;
+    string updated = 6;
+}
+
+message Response {
+    User user = 1;
+    repeated Error errors = 2;
+}
+
+message Error {
+    int32 code = 1;
+    string description = 2;
+}
+
+message Token {
+    string token = 1;
+    bool valid = 2;
+}

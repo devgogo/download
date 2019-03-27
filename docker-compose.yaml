@@ -1,0 +1,35 @@
+version: '2.0'
+services:
+  consul:
+    command: -server -bootstrap -rejoin
+    image: progrium/consul:latest
+    ports:
+      - "8300:8300"
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53/udp"
+  micro:
+    command: --registry_address=consul:8500 web
+    image: microhq/micro:latest
+    links:
+      - consul
+      - account
+    ports:
+      - "8082:8082"
+  api:
+    command: --registry_address=consul:8500 api --handler=rpc
+    image: microhq/micro:latest
+    links:
+      - consul
+      - account
+    ports:
+      - "8081:8080"
+  account:
+    build: ./srv/account
+    environment:
+      DB_HOST: 192.168.2.208:33061
+      DB_USER: homestead
+      DB_PASSWORD: secret
+      DB_NAME: homestead
+    links:
+      - consul
